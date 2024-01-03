@@ -23,24 +23,26 @@ const Profile = () => {
    
   };
 
-let id = "6583e3cd9d8ccbc31a187c94"
+
   //  ------------------------- Handle File Upload -----------------------
   const handleFileUpload = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData();
+      const userId = JSON.parse(localStorage.getItem('userData')).userId;
       formData.append("file", file);
       formData.append("postText", postText);
-
+      formData.append("userId", userId);
+  
       const response = await fetch("http://localhost:4000/post/create", {
         method: "POST",
         body: formData,
       });
-
+  
       if (response.ok) {
         console.log("File upload successful!");
         toast.success("File uploaded");
-        setShowModal(false); 
+        setShowModal(false);
       } else {
         console.error("File upload failed:", response.statusText);
       }
@@ -48,7 +50,6 @@ let id = "6583e3cd9d8ccbc31a187c94"
       console.error("Error during file upload:", error.message);
     }
   };
-
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
