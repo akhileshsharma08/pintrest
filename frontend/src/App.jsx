@@ -6,6 +6,8 @@ import Navbar from "./components/Navbar";
 import Profile from "./components/Profile";
 import Home from "./components/Home";
 import Cookies from "js-cookie";
+import Explore from "./components/Explore";
+import FeedDetail from "./components/FeedDetail";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -32,6 +34,9 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Register />} />
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/post/:id" element={<FeedDetail />} />
+          {/* <Route path="/profile" element={<Profile />} /> */}
           <Route
             path="/profile"
             element={

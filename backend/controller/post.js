@@ -5,6 +5,9 @@ const { v4: uuidv4 } = require('uuid');
 const fileUpload = require('express-fileupload');
 const path = require('path');
 const multer = require('multer');
+const { AsyncLocalStorage } = require('async_hooks');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 
 // ----------------------------- get all post --------------------------
@@ -22,7 +25,7 @@ exports.getallPost = async (req, res) => {
 };
 // --------------------creating a post with file upload -------------------
 exports.createPost = async (req, res) => {
-  const { userId, postText } = req.body;
+  const { userId,postTitle, postText } = req.body;
 
   try {
     await connectMongoDb();
@@ -34,8 +37,8 @@ exports.createPost = async (req, res) => {
 
     const sampleFile = req.files.file;
     const uniqueFilename = uuidv4();
-    const filenameWithExtension = `${uniqueFilename}${path.extname(sampleFile.name)}`;
-    const uploadPath = __dirname + '/../../frontend/src/uploads/' + filenameWithExtension;
+    const postImage = `${uniqueFilename}${path.extname(sampleFile.name)}`;
+    const uploadPath = __dirname + '/../../frontend/public/uploads/' + postImage;
 
     await sampleFile.mv(uploadPath, async function (err) {
       if (err) {
@@ -45,7 +48,7 @@ exports.createPost = async (req, res) => {
 
       //---------------- creating post -----------
       try {
-        const createdPost = await postModel.create({ userId, postText });
+        const createdPost = await postModel.create({ userId,postTitle, postText,postImage });
         res.status(200).json({ user: createdPost, message: 'Post created successfully' });
 
         let user = await userModel.findOne({ _id: userId });
@@ -61,3 +64,48 @@ exports.createPost = async (req, res) => {
     res.status(500).json({ success: false, error: 'Internal server error' });
   }
 };
+
+// --------------post according to user---------------
+exports.showAllPostOfUser = async (req, res) => {
+const{token} = req.body
+const mytoken = JSON.parse(token)
+
+  try {
+    const decoded = jwt.verify(mytoken.token, process.env.secret); 
+    const userId = decoded.userId;
+    console.log(userId,"showalluser")
+    await connectMongoDb();
+    const userPosts = await postModel.find({ userId }); 
+    res.status(200).json({ userPosts, message: "All posts of the user" });
+  } catch (error) {
+    console.error('Error fetching user posts:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+// --------------show single post to user---------------
+
+exports.showSinglePost = async (req, res) => {
+  const { id } = req.params; 
+  console.log(id);
+
+  try {
+    await connectMongoDb();
+    const getpost = await postModel.findById({_id:id});
+
+    if (!getpost) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    res.status(200).json({ getpost, message: "Get single post" });
+    console.log(getpost, "Get Single post");
+  } catch (error) {
+    console.error('Error fetching single post:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+};
+// --------------edit a post -------------------------
+
+exports.editSinglePost=(req,res)=>{
+
+}

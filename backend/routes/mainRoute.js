@@ -24,7 +24,9 @@ router.post('/isLoggedIn', passportJwt.isLoggedIn);
 // Post Routes
 router.get('/post/all', postController.getallPost);
 router.post('/post/create', postController.createPost);
-router.post('/uploads', common.uploadFile);
+router.post('/post/user_post', postController.showAllPostOfUser);
+router.get('/post/:id', postController.showSinglePost);
+router.post('/user/profileUpload', common.uploadFile);
 
 // Other routes
 router.get('/profile', (req, res) => {

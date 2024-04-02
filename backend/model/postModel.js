@@ -7,6 +7,10 @@ const postSchema = new mongoose.Schema({
     ref: 'User', // Reference to the User model
     required: true,
   },
+  postTitle: {
+    type: String,
+    required: true,
+  },
   postText: {
     type: String,
     required: true,
@@ -14,11 +18,11 @@ const postSchema = new mongoose.Schema({
   likes: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User', // Reference to the User model for likes
+      ref: 'User', 
     },
   ],
   postImage: {
-    type: String, // Assuming the image is stored as a URL
+    type: String, 
   },
   createdAt: {
     type: Date,

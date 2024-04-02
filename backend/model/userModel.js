@@ -32,9 +32,9 @@ const userSchema = new mongoose.Schema({
       ref: 'Post',
     },
   ],
-  profileId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'UserProfile',
+  profileImage: {
+    type: String,
+    // ref: 'UserProfile',
   },
 });
 

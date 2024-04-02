@@ -36,11 +36,11 @@ const Login = () => {
         sessionStorage.setItem('token', data.token);
         const expires = new Date();
         expires.setTime(expires.getTime() + 60 * 60 * 1000); // 1 hour in milliseconds
-        // document.cookie = `userData=${JSON.stringify(userObject)};expires=${expires.toUTCString()};path=/`;
         document.cookie = `token=${JSON.stringify(userObject.token)};expires=${expires.toUTCString()};path=/`;
-        console.log('Login successful!', data);
-        setLoading(false);
-        navigate('/profile');
+        setTimeout(()=>{
+          setLoading(false);
+          navigate('/profile', { replace: true });
+        },1000)
       } else {
         const errorData = await response.json();
         console.error('Login failed:', errorData.message);

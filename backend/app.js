@@ -9,6 +9,7 @@ const mainRouter = require("./routes/mainRoute");
 const passport = require("passport");
 const connectMongoDb = require('./database/db');
 const fileUpload = require('express-fileupload');
+require('dotenv').config();
 
 const app = express();
 connectMongoDb()
